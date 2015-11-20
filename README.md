@@ -1,2 +1,2 @@
-# JsExercise
+# Exercise
 练习
