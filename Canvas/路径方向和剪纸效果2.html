@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title></title>
+<style>
+	#canvas { border: 1px solid #aaa; display: block; margin: 50px auto;}
+</style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+<script>
+window.onload = function(){
+	var oC = document.getElementById('canvas');
+	var oGC = oC.getContext('2d');
+	oC.width = 800;
+	oC.height = 800;
+	
+	/*
+		非零环绕原则
+		绘制剪纸效果、让圆环的内圆阴影出现在内侧
+	*/
+
+	oGC.beginPath();
+	oGC.rect(100,100,600,600); // 正、rect函数绘制的矩形是顺时针方向的
+	pathRect(oGC,200,200,400,200); // 逆
+	// pathTriangle(oGC,300,450,150,650,450,650); // 逆
+	// oGC.arc(550,550,100,0,Math.PI*2,true); // 逆
+	oGC.closePath();
+
+	oGC.fillStyle = "#058";
+	oGC.shadowColor = "gray";
+	oGC.shadowOffsetX = 10;
+	oGC.shadowOffsetY = 10;
+	oGC.shadowBlur = 10;
+	oGC.fill();
+};
+
+function pathRect( cxt, x, y, width, height){
+	cxt.moveTo(x,y);
+	cxt.lineTo(x,y+height);
+	cxt.lineTo(x+width,y+height);
+	cxt.lineTo(x+width,y);
+	cxt.lineTo(x,y);
+}
+
+function pathTriangle( cxt, x1, y1, x2, y2, x3, y3){
+	cxt.moveTo(x1,y1);
+	cxt.lineTo(x2,y2);
+	cxt.lineTo(x3,y3);
+	cxt.lineTo(x1,y1);
+}
+
+</script>
+</html>

@@ -1,0 +1,390 @@
+@charset "UTF-8";
+
+//------------------------------
+// CSS3 scss mixins
+// http://bourbon.io/
+// https://github.com/thomas-mcdonald/bootstrap-sass/blob/master/vendor/assets/stylesheets/bootstrap/_mixins.scss
+//------------------------------
+
+
+//------------------------------
+// prefixer
+// eg. @include prefixer(border-radius,$radius,webkit spec)
+//------------------------------
+
+$prefix-for-webkit: true !default;
+$prefix-for-mozilla: true !default;
+$prefix-for-microsoft: true !default;
+$prefix-for-opera: true !default;
+$prefix-for-spec: true !default; //required for keyframe mixin
+
+@mixin prefixer($property,$value,$prefixes){
+	@each $prefix in $prefixes {
+		@if $prefix == webkit and $prefix-for-webkit == true {
+			-webkit-#{$property}: $value;
+		}
+		@else if $prefix == moz and $prefix-for-mozilla == true {
+			-moz-#{$property}: $value;
+		}
+		@else if $prefix == ms and $prefix-for-microsoft == true {
+			-ms-#{$property}: $value;
+		}
+		@else if $prefix == o and $prefix-for-opera == true {
+			-o-#{$property}: $value;
+		}
+		@else if $prefix == spec and $prefix-for-spec == true {
+			#{$property}: $value;
+		}
+		@else {
+			@warn "Unrecognized prefix: #{$prefix}";
+		}
+	}
+}
+
+//disable prefix
+@mixin disable-prefix-for-all(){
+	$prefix-for-webkit: false;
+	$prefix-for-mozilla: false;
+	$prefix-for-microsoft: false;
+	$prefix-for-opera: false;
+	$prefix-for-spec: false;
+}
+
+//Return vendor-prefixed property names if appropriate
+//eg. transitionPropertyNames((transform, color, background), moz) -> -moz-transform, color, background
+
+@function transitionPropertyName($property,$vendor:false){
+	//put other properties that need to be prefixed here aswell
+	@if $vendor and $property == transform {
+		@return unquote("-"+$vendor+"-"+$property);
+	}
+	@else {
+		@return $property;
+	}
+}
+
+@function transitionPropertyNames($properties,$vendor:false){
+	$new-properties:();
+	@each $property in $properties {
+		$new-properties: append($new-properties,transitionPropertyName($property,$vendor),comma);
+	}
+	@return $new-properties;
+}
+
+//---------------------------------
+// 1. border-radius
+// eg. @include border-radius(4px)->border-radius: 4px;
+// single corner border radius
+// eg. @include border-radius(1px 0 0 0)-> border-radius: 1px 0 0 0;
+//---------------------------------
+@mixin border-radius($radius:$baseRadius){
+	@include prefixer(border-radius,$radius,webkit spec);
+	//keeps background from busting out of border
+	@include background-clip(padding-box);
+}
+
+//----------------------------------
+// 2. box sizing
+// $type: borer-box | padding-box | content-box
+// @include box-sizing()-> box-sizing:border-box
+//----------------------------------
+@mixin box-sizing($type: border-box){
+	@include prefixer(box-sizing,$type,webkit moz spec);
+}
+
+//-----------------------------------
+// 3. border image
+//    $path: image url
+//    $offsets:
+//    $repeats:stretch | repeat | round
+//    eg. @include border-image(url(button_sprite.png), 0 18 50 18, stretch)
+//------------------------------------
+@mixin border-image($path,$offsets,$repeats){
+	@include prefixer(border-image,$path $offsets $repeats,webkit moz o ms spec);
+}
+
+//-------------------------------------
+// 4. box shadow
+//    eg. @include box-shadow()
+//-------------------------------------
+@mixin box-shadow($shadow...){
+	@include prefixer(box-shadow,$shadow,webkit spec);
+}
+
+//-------------------------------------
+// 5. no have box shadow
+//-------------------------------------
+@mixin no-box-shadow($noboxshadow:none){
+	@include prefixer(box-shadow,$noboxshadow,webkit spec);
+}
+
+//--------------------------------------
+// 6. transform
+//--------------------------------------
+
+//6.1 transform origin
+// x-axis - left | center | right  | length | %
+// y-axis - top  | center | bottom | length | %
+// z-axis -                          length
+//eg. @include transform-origin(50% 50%); //2d
+//eg. @include transform-origin(left bottom -50px)
+@mixin transform-origin($axes: 50%){
+	@include prefixer(transform-origin,$axes,webkit moz ms o spec);
+}
+
+//6.2 transform style
+// flat | preserve-3d
+//eg. @include transform-style;
+@mixin transform-style($style:preserve-3d){
+	@include prefixer(transform-style,$style,webkit moz ms o spec);
+}
+
+//6.3 perspective
+// none | <length>
+//eg. @include perspective(300px);
+@mixin perspective($depth:none){
+	@include prefixer(perspective,$depth,webkit moz ms o spec);
+	@include transform-style;
+}
+
+//6.4 perspective origin
+// x-axis - left | center | right  | length | %
+// y-axis - top  | center | bottom | length | %
+//eg. @include perspective-origin;
+@mixin perspective-origin($axis: 50% 50%){
+	@include prefixer(perspective-origin,$axis,webkit moz ms o spec);
+}
+
+//6.5 backface visibility
+// visible | hidden
+//eg. @include backface-visibility(visible);
+@mixin backface-visibility($visibility:hidden){
+	@include prefixer(backface-visibility,$visibility,webkit moz ms o spec);
+}
+
+//6.6 transform
+//eg. @include transform(rotateY(90) translateZ(1em));
+@mixin transform($property...){
+	@include prefixer(transform,$property,webkit moz ms o spec);
+}
+
+//6.7 2D transform
+
+//6.7.1 rotate
+//eg. 	@include rotate(30deg);
+@mixin rotate($degrees){
+	@include prefixer(transform,rotate($degrees),webkit moz ms o spec);
+}
+
+//6.7.2 scale
+//eg. @include scale(1,.9);
+@mixin scale($ratio...){
+	@include prefixer(transform,scale($ratio...),webkit moz ms o spec);
+}
+
+//6.7.3 translate
+//eg. @include translate(10px,30px);
+@mixin translate($distance...){
+	@include prefixer(transform,translate($distance...),webkit moz ms o spec);
+}
+
+//6.7.4 skew
+//eg. @include skew(30deg,40deg)
+@mixin skew($degrees...){
+	@include prefixer(transform,skew($degrees...),webkit moz ms o spec);
+}
+
+//6.8 3D transform
+
+//6.8.1 rotateX
+//eg. 	@include rotateX(30deg);
+@mixin rotateX($degrees){
+	@include prefixer(transform,rotateX($degrees),webkit moz ms o spec);
+}
+
+//6.8.2 rotateY
+//eg. 	@include rotateY(30deg);
+@mixin rotateY($degrees){
+	@include prefixer(transform,rotateY($degrees),webkit moz ms o spec);
+}
+
+//6.8.3 rotateZ
+//eg. 	@include rotateZ(30deg);
+@mixin rotateZ($degrees){
+	@include prefixer(transform,rotateZ($degrees),webkit moz ms o spec);
+}
+
+//6.8.4 rotate3d
+//eg. 	@include rotate3d(1, 1, 1,10deg);
+@mixin rotate3d($degrees...){
+	@include prefixer(transform,rotate3d($degrees...),webkit moz ms o spec);
+}
+
+//6.8.5 scaleX
+//eg. @include scaleX(.3);
+@mixin scaleX($ratio){
+	@include prefixer(transform,scaleX($ratio),webkit moz ms o spec);
+}
+
+//6.8.6 scaleY
+//eg. @include scaleY(1.2);
+@mixin scaleY($ratio){
+	@include prefixer(transform,scaleY($ratio),webkit moz ms o spec);
+}
+
+//6.8.7 scaleZ
+//eg. @include scaleZ(1.1);
+@mixin scaleZ($ratio){
+	@include prefixer(transform,scaleZ($ratio),webkit moz ms o spec);
+}
+
+//6.8.7 scale3d
+//eg. @include scale3d(1,1,.6);
+@mixin scale3d($ratio...){
+	@include prefixer(transform,scale3d($ratio...),webkit moz ms o spec);
+}
+
+//6.8.8 translateX
+//eg. @include translateX(130px);
+@mixin translateX($distance){
+	@include prefixer(transform,translateX($distance),webkit moz ms o spec);
+}
+
+//6.8.9 translateY
+//eg. @include translateY(130px);
+@mixin translateY($distance){
+	@include prefixer(transform,translateY($distance),webkit moz ms o spec);
+}
+
+//6.8.10 translateZ
+//eg. @include translateZ(130px);
+@mixin translateZ($distance){
+	@include prefixer(transform,translateZ($distance),webkit moz ms o spec);
+}
+
+//6.8.11 translate3d
+//eg. @include translate3d(10px,20px,30px);
+@mixin translate3d($distance...){
+	@include prefixer(transform,translate3d($distance...),webkit moz ms o spec);
+}
+
+//6.8.12 skewX
+//eg. 	@include skewX(30deg);
+@mixin skewX($degrees){
+	@include prefixer(transform,skewX($degrees),webkit moz ms o spec);
+}
+
+//6.8.13 skewY
+//eg.	@include skewY(30deg);
+@mixin skewY($degrees){
+	@include prefixer(transform,skewY($degrees),webkit moz ms o spec);
+}
+
+//6.8.14 skewZ
+//eg.	@include skewZ(30deg);
+@mixin skewZ($degrees){
+	@include prefixer(transform,skewZ($degrees),webkit moz ms o spec);
+}
+
+//----------------------------------
+// 7 background 
+//----------------------------------
+
+//7.1 background origin
+//		padding-box | border-box | content-box
+//eg. @include background-origin;
+@mixin background-origin($origin:padding-box){
+	@include prefixer(background-origin,$origin,webkit spec);
+}
+
+//7.2 background clip
+// border-box | padding-box | content-box
+//eg. @include background-clip;
+@mixin background-clip($clip:border-box){
+	@include prefixer(background-clip,$clip,webkit spec);
+}
+
+//7.3 background size
+//eg. 	@include background-size(50px 30px,40px 30px);
+@mixin background-size($size...){
+	@include prefixer(background-size,$size,webkit spec);
+}
+
+//7.4 horizontal gradient
+// eg. left -> right @include gradient-horizontal(#333, #ccc);
+// eg. right -> left @include gradient-horizontal(#ccc, #333);
+// eg. multiple -> @include gradient-horizontal(#ccc 20%,#fff 20%,#fff 60%,#f36 60%);
+@mixin gradient-horizontal($gradient...){
+  background-image: -moz-linear-gradient(left, $gradient); // FF 3.6+
+  background-image: -webkit-linear-gradient(left, $gradient); // Safari 5.1+, Chrome 10+
+  background-image: -o-linear-gradient(left, $gradient); // Opera 11.10
+  background-image: linear-gradient(to right, $gradient); // Standard, IE10
+}
+
+//7.5 vertical gradient
+// eg. top -> bottom @include gradient-vertical(#333, #ccc);
+// eg. bottom -> top @include gradient-vertical(#ccc, #333);
+//eg. multiple -> @include gradient-vertical(#ccc 20%,#fff 20%,#fff 60%,#f36 60%);
+@mixin gradient-vertical($gradient...) {
+  background-image: -moz-linear-gradient(top, $gradient); // FF 3.6+
+  background-image: -webkit-linear-gradient(top, $gradient); // Safari 5.1+, Chrome 10+
+  background-image: -o-linear-gradient(top, $gradient); // Opera 11.10
+  background-image: linear-gradient(to bottom, $gradient); // Standard, IE10
+}
+
+//7.6 direction gradient 
+// eg. @include gradient-directional(45deg, #333 30%, #ccc);
+@mixin gradient-directional($gradient...) {
+  background-image: -moz-linear-gradient($gradient); // FF 3.6+
+  background-image: -webkit-linear-gradient($gradient); // Safari 5.1+, Chrome 10+
+  background-image: -o-linear-gradient($gradient); // Opera 11.10
+  background-image: linear-gradient($gradient); // Standard, IE1
+}
+
+//7.7 radial gradient
+//eg. @include gradient-radial(ellipse,hsla(120,70%,60%,.9),hsla(360,60%,60%,.9));
+@mixin gradient-radial($gradient...){
+  background-image: -moz-radial-gradient($gradient); // FF 3.6+
+  background-image: -webkit-radial-gradient($gradient); // Safari 5.1+, Chrome 10+
+  background-image: -o-radial-gradient($gradient); // Opera 11.10
+  background-image: radial-gradient($gradient); // Standard, IE1
+  background-repeat: no-repeat;
+}
+
+//7.8 background stripes
+// thanks css trick:http://css-tricks.com/striped-background-gradients/
+//eg.
+
+@mixin background-image($undirection,$direction,$gradient){
+	background-image: -webkit-linear-gradient($undirection,$gradient);
+	background-image: -moz-linear-gradient($undirection,$gradient);
+	background-image: -o-linear-gradient($undirection,$gradient);
+	background-image: linear-gradient($direction,$gradient);
+}
+
+@mixin background-stripes($colors,$undirection:"top",$direction:"to bottom"){
+	$stripes: 100% / length($colors);
+	$auto: not(type-of(nth($colors,1)) == list);
+	$gradient: ();
+	
+	@for $i from 1 through length($colors) {
+		$item: nth($colors,$i);
+		$dump: ();
+		
+		@if $auto == true {
+			$dump: $item $stripes * ($i - 1), $item $stripes * $i;
+		}
+		@else {
+			@if $i > 1 {
+				$pre: nth($colors, $i - 1);
+				$dump: append($dump,nth($item,1) nth($pre,2));
+			}
+			$dump: append($dump, $item);
+		}
+		$gradient: join($gradient,$dump,comma);
+	}
+	@include background-image($undirection,$direction,$gradient);
+}
+//------------------------------------------
+// 8. transition
+//------------------------------------------

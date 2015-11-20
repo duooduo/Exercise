@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="format-detection" content="telephone=no" />
+<title>fixed模拟</title>
+<style>
+* { margin: 0; padding: 0;}
+.wrap { width: 1000px; height: 2000px; background-color: #ddd; margin: 0 auto; position: relative;}
+#div1 { width: 200px; height: 400px; background-color: #f80; position: absolute; right: 0; top: 100px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+	<div id="div1"></div>
+</div>
+<script src="move.js"></script>
+<script>
+window.onload = function() {
+	var iTimer = null;
+	var iOpen = false;
+	var oDiv = document.getElementById('div1');
+	var TOP = parseInt(css(oDiv,'top'));
+
+	setPos();
+	function setPos() {
+		var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+		iOpen = true;
+		doMove(oDiv, {top: scrollTop+TOP},'easeBoth',600,function(){
+			iOpen = false;
+		});
+	}
+	
+	window.onscroll = window.onresize = function() {
+		if ( iOpen ) {
+			clearInterval(iTimer);
+			iOpen = false;
+		}
+		setPos();
+	}
+};
+</script>
+</body>
+</html>

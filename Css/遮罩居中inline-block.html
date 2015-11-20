@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="format-detection" content="telephone=no" />
+<title>遮罩 居中</title>
+<style>
+	.mask { width: 100vw; height: 100vh; background: rgba(0,0,0,.5); text-align: center; position: fixed; left: 0; top: 0; z-index: 100;}
+	.mask:after { display: inline-block; content: ''; width: 0; height: 100%; vertical-align: middle;}
+	.box { width: 100px; height: 100px; background: #f70; display: inline-block; text-align: left; vertical-align: middle;}
+</style>
+</head>
+<body>
+    <div class="mask">
+    	<div class="box"></div>
+    </div>
+</body>
+</html>

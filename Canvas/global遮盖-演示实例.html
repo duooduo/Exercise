@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title></title>
+<style>
+	#canvas { border: 1px solid #aaa; display: block; margin: 50px auto;}
+	#buttons { width: 1200px; margin: 10px auto; clear: both;}
+	#buttons a { font-size: 18px; display: block; float: left; margin-right: 14px;}
+</style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="buttons">
+    	<a href="#">source-over</a>
+    	<a href="#">source-atop</a>
+    	<a href="#">source-in</a>
+    	<a href="#">source-out</a>
+    	<a href="#">destination-over</a>
+    	<a href="#">destination-atop</a>
+    	<a href="#">destination-in</a>
+    	<a href="#">destination-out</a>
+    	<a href="#">lighter</a>
+    	<a href="#">copy</a>
+    	<a href="#">xor</a>
+    </div>
+</body>
+<script>
+/*
+	透明度：
+	globalAlpha = 1(default)
+
+	遮盖方式：
+	globalCompositeOperation = "source-over" (default)	
+		source-over : 后绘制的图形会盖住之前的
+		source-atop	:
+		source-in	:
+		source-out	:
+		destination-over : 先绘制的图形会盖住这次绘制的
+		destination-atop :
+		destination-in	 :
+		destination-out	 :
+		lighter	:
+		copy	:	
+		xor		:
+
+*/
+window.onload = function(){
+
+	draw("source-over");
+
+	var buttons = document.getElementById("buttons").getElementsByTagName('a');
+	for(var i=0; i<buttons.length; i++){
+		buttons[i].onclick = function(){
+			draw(this.text);
+			return false;
+		};
+	}
+
+	function draw(compositeStyle){
+		var oC = document.getElementById('canvas');
+		var oGC = oC.getContext('2d');
+		oC.width = 1200;
+		oC.height = 800;
+
+		oGC.clearRect(0,0,oC.width,oC.height);
+
+		// draw title
+		oGC.font = "bold 40px Arial";
+		oGC.textAlign = "center";
+		oGC.textBaseline = "middle";
+		oGC.fillStyle = "#058";
+		oGC.fillText("globalCompositeOperation = "+ compositeStyle, oC.width/2,60);
+
+		// draw a rect 
+		oGC.fillStyle = "blue";
+		oGC.fillRect(300,150,500,500);
+
+		// draw a triangle
+		oGC.globalCompositeOperation = compositeStyle;
+		oGC.fillStyle = "red";
+		oGC.beginPath();
+		oGC.moveTo(700,250);
+		oGC.lineTo(1000,750);
+		oGC.lineTo(400,750);
+		oGC.closePath();
+		oGC.fill();
+	}
+	
+};
+</script>
+</html>

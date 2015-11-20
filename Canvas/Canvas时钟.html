@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>Canvas时钟</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<style>
+	body { background: #ddd;}
+	canvas { background: #fff; border: 5px solid #ccc; margin: 50px;}
+</style>
+</head>
+<body>
+    <canvas id="myCanvas" width="400" height="400"></canvas>
+</body>
+<script>
+window.onload = function(){
+	var oC = document.getElementById('myCanvas');
+	var oGC = oC.getContext('2d');
+
+	// 画钟表
+	function toDraw(){ 
+		var x = 200;
+		var y = 200;
+		var r = 150;
+
+		oGC.clearRect(0,0,oC.width,oC.height);
+
+		var oDate = new Date();
+		var oHours = oDate.getHours();
+		var oMin = oDate.getMinutes();
+		var oSen = oDate.getSeconds();
+
+		var oHoursValue = (-90 + oHours*30 + oMin/2) * Math.PI/180;
+		var oMinValue = (-90 + oMin*6) * Math.PI/180;
+		var oSenValue = (-90 + oSen*6) * Math.PI/180;
+
+
+		// 表盘
+		oGC.strokeStyle = '#666';
+		oGC.beginPath();
+		for(var i=0; i<60; i++){
+			oGC.moveTo(x,y);
+			oGC.arc(x,y,r,6*i*Math.PI/180,6*(i+1)*Math.PI/180,false);
+		}
+		oGC.closePath();
+		oGC.stroke();
+
+		oGC.fillStyle = 'white';
+		oGC.beginPath();
+		oGC.moveTo(x,y);
+		oGC.arc(x,y,r*19/20,0,360*Math.PI/180,false);
+		oGC.closePath();
+		oGC.fill();
+
+		oGC.lineWidth = 3;
+		oGC.beginPath();
+		for(var i=0; i<12; i++){
+			oGC.moveTo(x,y);
+			oGC.arc(x,y,r,30*i*Math.PI/180,30*(i+1)*Math.PI/180,false);
+		}
+		oGC.closePath();
+		oGC.stroke();
+
+		oGC.fillStyle = 'white';
+		oGC.beginPath();
+		oGC.moveTo(x,y);
+		oGC.arc(x,y,r*18/20,0,360*Math.PI/180,false);
+		oGC.closePath();
+		oGC.fill();
+
+		// 表针
+		oGC.lineWidth = 5;
+		oGC.strokeStyle = '#555';
+		oGC.beginPath();
+		oGC.moveTo(x,y);
+		oGC.arc(x,y,r*10/20,oHoursValue,oHoursValue,false);
+		oGC.closePath();
+		oGC.stroke();
+
+		oGC.lineWidth = 3;
+		oGC.strokeStyle = '#555';
+		oGC.beginPath();
+		oGC.moveTo(x,y);
+		oGC.arc(x,y,r*14/20,oMinValue,oMinValue,false);
+		oGC.closePath();
+		oGC.stroke();
+
+		oGC.lineWidth = 1;
+		oGC.strokeStyle = '#e34646';
+		oGC.beginPath();
+		oGC.moveTo(x,y);
+		oGC.arc(x,y,r*19/20,oSenValue,oSenValue,false);
+		oGC.closePath();
+		oGC.stroke();
+	}
+
+	setInterval(toDraw,1000);
+	toDraw();
+};
+</script>
+</html>

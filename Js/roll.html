@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>roll</title>
+<style>
+	* {padding: 0; margin: 0;}
+	body { background: #ddd; font: 14px/1 '微软雅黑'; color: #333;}
+	#rollBox { width: 400px; height: 300px; border: 5px solid #999; background: #fff; margin: 50px auto 0;}
+	#rollBox p { font-size: 30px; line-height: 40px; padding: 30px 0 10px; text-align: center;}
+	#rollBox .range { padding: 10px 30px; height: 40px; text-align: center;}
+	#rollBox .range i { padding: 0 10px; font-style: normal;}
+	#rollBox .range input { width: 60px; height: 30px; line-height: 30px; text-align: center; }
+	#rollBox button { background: #F95499; color: #fff; border: 0; border-radius: 8px; width: 200px; height: 40px; line-height: 40px; font-size: 20px; margin: 0 auto 0; display: block; cursor: pointer;}
+	#rollBox .result { padding: 40px 30px 0 100px; line-height: 40px;}
+	#rollBox .result span { color: #FA3B3B; font-size: 40px;}
+
+</style>
+</head>
+<body>
+<div id="rollBox">
+	<p>点击ROLL点 x~y</p>
+	<div class="range">
+		<i>x:</i><input type="number" value="0" />
+		<i>y:</i><input type="number" value="100"/>
+	</div>
+	<div><button>开始</button></div>
+	<div class="result">结果：<span></span></div>
+</div>    
+</body>
+<script>
+window.onload = function(){
+	var box = document.getElementById('rollBox');	
+	var btn = box.getElementsByTagName('button')[0];
+	var res = box.getElementsByTagName('span')[0];
+
+	btn.onclick = function(){
+		var x = parseInt(box.getElementsByTagName('input')[0].value) || 0;
+		var y = parseInt(box.getElementsByTagName('input')[1].value) || 100;
+		// res.innerHTML = parseInt( Math.random()*(y-x+1)+x ); // 方法一
+		res.innerHTML = Math.round( Math.random()*(y-x)+x ); // 方法二
+	};
+};
+</script>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title></title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<style>
+	body { background: #ddd;}
+	canvas { background: #fff; }
+</style>
+</head>
+<body>
+    <canvas id="myCanvas" width="400" height="400"></canvas>
+</body>
+<script>
+window.onload = function(){
+
+	var oC = document.getElementById('myCanvas');
+	var oGC = oC.getContext('2d');
+
+	oGC.fillRect(0,0,100,100);
+	oGC.fillStyle = 'red';
+	oGC.globalAlpha = 0.5; //全局透明度
+	oGC.fillRect(50,50,100,100);	
+
+};
+</script>
+</html>

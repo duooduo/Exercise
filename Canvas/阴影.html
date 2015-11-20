@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title></title>
+<style>
+	#canvas { border: 1px solid #aaa; display: block; margin: 50px auto;}
+</style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+<script>
+window.onload = function(){
+	var oC = document.getElementById('canvas');
+	var oGC = oC.getContext('2d');
+	oC.width = 800;
+	oC.height = 800;
+
+	/*
+		阴影：
+		shadowColor 阴影颜色
+		shadowOffsetX x平移量
+		shadowOffsetY y平移量
+		shadowBlur 模糊程度
+	*/
+	
+	oGC.fillStyle = "#058";
+	oGC.shadowColor = "gray";
+	oGC.shadowOffsetX = 20; // 负值则表示反向
+	oGC.shadowOffsetY = 20;
+	oGC.shadowBlur = 5; // 0是不模糊，值越大越模糊
+
+	oGC.fillRect(200,200,400,400);
+
+};
+
+
+</script>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title></title>
+<style>
+	#canvas { border: 1px solid #aaa; display: block; margin: 50px auto;}
+</style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+<script>
+/*		
+	点击检测：
+	isPointInPath(x,y) 
+	检测当前鼠标x,y的坐标是否在绘制的路径内
+*/
+
+var balls = [];
+var oC = document.getElementById('canvas');
+var oGC = oC.getContext('2d');
+window.onload = function(){
+	oC.width = 800;
+	oC.height = 800;
+	
+	oGC.fillStyle = "#058";
+	for(var i=0; i<10; i++){
+		var aBall = {
+						x: Math.random()*oC.width,
+						y: Math.random()*oC.height,
+						r: Math.random()*50+20
+		};
+		balls[i] = aBall;
+	}
+
+	draw();
+	oC.addEventListener("mousemove",detect);
+};
+
+function draw(x,y){
+	oGC.clearRect(0,0,oC.width,oC.height);
+	for(var i=0; i< balls.length; i++){
+		oGC.beginPath();
+		oGC.arc( balls[i].x, balls[i].y, balls[i].r, 0, Math.PI*2);
+		if( oGC.isPointInPath(x,y))
+			oGC.fillStyle = "red";
+		else
+			oGC.fillStyle = "#058";
+		oGC.fill();
+	}
+}
+
+function detect( event ){
+	var x = event.clientX - oC.getBoundingClientRect().left;
+	var y = event.clientY - oC.getBoundingClientRect().top;
+
+	draw(x,y);
+}
+
+</script>
+</html>
