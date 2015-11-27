@@ -9,6 +9,7 @@ var fruitObj = function(){
 	this.alive = []; // bool,是否活着
 	this.x = [];
 	this.y = [];
+	this.aneNo = [];
 	this.l = [];
 	this.spd = []; // 成长速度，上飘速度
 	this.fruitType = []; // 果实类型
@@ -21,6 +22,7 @@ fruitObj.prototype.init = function(){
 		this.alive[i] = false;
 		this.x[i] = 0;
 		this.y[i] = 0;
+		this.aneNo[i] = 0;
 		this.spd[i] = Math.random() * 0.005 + 0.005; // 速度[0.005, 0.01)
 		this.fruitType[i] = '';
 	}
@@ -36,8 +38,11 @@ fruitObj.prototype.draw = function(){
 			} else {
 				var pic = this.orange;
 			}
-			if(this.l[i] <= 14){
-				this.l[i] += this.spd[i] * deltaTime; // 果实长大
+			if(this.l[i] <= 14){ // 果实长大
+				var no = this.aneNo[i];
+				this.x[i] = ane.headx[no];
+				this.y[i] = ane.heady[no];
+				this.l[i] += this.spd[i] * deltaTime;
 			} else {
 				this.y[i] -= this.spd[i] * 7 * deltaTime;
 			}
@@ -52,9 +57,10 @@ fruitObj.prototype.draw = function(){
 
 fruitObj.prototype.born = function(i){
 	// 需要找到海葵的位置，长在顶点
-	var aneID = Math.floor(Math.random() * ane.num);
-	this.x[i] = ane.x[aneID];
-	this.y[i] = canHeight - ane.len[aneID];
+	//var aneID = Math.floor(Math.random() * ane.num);
+	this.aneNo[i] = Math.floor(Math.random() * ane.num);
+	//this.x[i] = ane.headx[aneID];
+	//this.y[i] = ane.heady[aneID];
 	this.l[i] = 0;
 	this.alive[i] = true;
 	var ran = Math.random();
